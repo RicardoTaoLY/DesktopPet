@@ -361,6 +361,9 @@ void DesktopPet::UpdateLayeredWindow() {
             // 创建翻转后的图像
             Bitmap flipped(petWidth, petHeight);
             Graphics flipGraphics(&flipped);
+            flipGraphics.SetInterpolationMode(InterpolationModeNearestNeighbor);
+            flipGraphics.SetPixelOffsetMode(PixelOffsetModeHalf);
+            flipGraphics.SetSmoothingMode(SmoothingModeNone);
             flipGraphics.ScaleTransform(-1.0f, 1.0f);
             flipGraphics.TranslateTransform(-(float)petWidth, 0);
             flipGraphics.DrawImage(frame, 0, 0, petWidth, petHeight);

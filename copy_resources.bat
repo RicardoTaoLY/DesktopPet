@@ -55,8 +55,8 @@ if exist "%lib_dir%\jsoncpp.exp" (
 )
 
 :: Copy application icon if exists
-if exist "%project_root%DesktopPet\main_icon.ico" (
-    copy /Y "%project_root%DesktopPet\main_icon.ico" "%target_dir%" >nul
+if exist "%project_root%DesktopPet\art_toy.ico" (
+    copy /Y "%project_root%DesktopPet\art_toy.ico" "%target_dir%" >nul
 )
 
 echo.

@@ -26,13 +26,6 @@ endif()
 
 project(DesktopPet LANGUAGES CXX)
 
-# 禁止源码内构建
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
-    message(FATAL_ERROR "Prohibit building in the source code directory! Please use the build folder"
-        
-    )
-endif()
-
 # 显示使用的 CMake 路径
 message(STATUS "******************************************************")
 message(STATUS "Using CMake from: ${CMAKE_COMMAND}")
@@ -66,7 +59,7 @@ file(GLOB_RECURSE DESKPET_SRC
 
 # 资源文件
 set(DESKPET_RC "${CMAKE_SOURCE_DIR}/DesktopPet/Resource.rc")
-set(DESKPET_ICON "${CMAKE_SOURCE_DIR}/DesktopPet/main_icon.ico")
+set(DESKPET_ICON "${CMAKE_SOURCE_DIR}/DesktopPet/art_toy.ico")
 
 # 添加可执行文件 - 设置为WIN32应用程序而非控制台
 add_executable(DesktopPet WIN32 ${DESKPET_SRC} ${DESKPET_RC})

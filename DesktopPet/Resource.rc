@@ -1,6 +1,6 @@
 #include "Resource.h"
 
-IDI_MAIN_ICON ICON "main_icon.ico"
+IDI_MAIN_ICON ICON "art_toy.ico"
 
 IDR_MAIN_MENU MENU
 BEGIN
