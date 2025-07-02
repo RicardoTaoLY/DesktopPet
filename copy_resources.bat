@@ -4,12 +4,53 @@ setlocal enabledelayedexpansion
 :: Get the directory where the script is located (project root)
 set "project_root=%~dp0"
 
-:: Detect build configuration (Debug/Release)
-set "build_config=Release"
-if exist "%project_root%bin\Debug" set "build_config=Debug"
+:: Define target directories
+set "debug_dir=%project_root%bin\Debug"
+set "release_dir=%project_root%bin\Release"
 
-:: Set target directory
-set "target_dir=%project_root%bin\%build_config%"
+:: Check existence of directories
+set "debug_exists=0"
+set "release_exists=0"
+if exist "%debug_dir%" set debug_exists=1
+if exist "%release_dir%" set release_exists=1
+
+:: Handle different directory scenarios
+if %debug_exists% equ 0 if %release_exists% equ 0 (
+    echo.
+    echo !!! Error: no Debug/Release directory detected !!!
+    echo Please build the project first to create Debug/Release folders.
+    echo.
+    goto :error
+)
+
+:: Set library directory
+set "lib_dir=%project_root%DesktopPet\lib"
+
+:: Copy to Debug if it exists
+if %debug_exists% equ 1 (
+    call :CopyResources "%debug_dir%"
+    if errorlevel 1 goto :error
+)
+
+:: Copy to Release if it exists
+if %release_exists% equ 1 (
+    call :CopyResources "%release_dir%"
+    if errorlevel 1 goto :error
+)
+
+echo.
+echo =====================================================
+echo Resources copied successfully to:
+if %debug_exists% equ 1 echo   - Debug: %debug_dir%
+if %release_exists% equ 1 echo   - Release: %release_dir%
+echo =====================================================
+echo.
+timeout /t 3 >nul
+goto :eof
+
+:CopyResources
+set "target_dir=%~1"
+echo Copying to %target_dir%...
 
 :: Create target directory if it doesn't exist
 if not exist "%target_dir%" (
@@ -23,30 +64,24 @@ if exist "%project_root%frames" (
     robocopy "%project_root%frames" "%target_dir%\frames" /E /XO /NFL /NDL /NJH /NJS >nul
 ) else (
     echo Error: frames folder not found
-    goto :error
+    exit /b 1
 )
 
 :: Copy jsoncpp library files
-set "lib_dir=%project_root%DesktopPet\lib"
-if exist "%lib_dir%" (
-    echo Copying library files...
-    
-    :: Copy jsoncpp.dll
-    if exist "%lib_dir%\jsoncpp.dll" (
-        copy /Y "%lib_dir%\jsoncpp.dll" "%target_dir%" >nul
-    ) else (
-        echo Warning: jsoncpp.dll not found
-    )
-    
-    :: Copy jsoncpp.lib
-    if exist "%lib_dir%\jsoncpp.lib" (
-        copy /Y "%lib_dir%\jsoncpp.lib" "%target_dir%" >nul
-    ) else (
-        echo Warning: jsoncpp.lib not found
-    )
+echo Copying library files...
+
+:: Copy jsoncpp.dll
+if not exist "%lib_dir%\jsoncpp.dll" (
+    echo Warning: jsoncpp.dll not found
 ) else (
-    echo Error: DesktopPet\lib directory not found
-    goto :error
+    copy /Y "%lib_dir%\jsoncpp.dll" "%target_dir%" >nul
+)
+
+:: Copy jsoncpp.lib
+if not exist "%lib_dir%\jsoncpp.lib" (
+    echo Warning: jsoncpp.lib not found
+) else (
+    copy /Y "%lib_dir%\jsoncpp.lib" "%target_dir%" >nul
 )
 
 :: Copy jsoncpp.exp if exists
@@ -59,15 +94,7 @@ if exist "%project_root%DesktopPet\art_toy.ico" (
     copy /Y "%project_root%DesktopPet\art_toy.ico" "%target_dir%" >nul
 )
 
-echo.
-echo =====================================================
-echo Resources copied successfully to: %target_dir%
-echo Frames: %target_dir%\frames
-echo Libraries: %target_dir%\*.dll, %target_dir%\*.lib
-echo =====================================================
-echo.
-timeout /t 3 >nul
-goto :eof
+exit /b 0
 
 :error
 echo.
