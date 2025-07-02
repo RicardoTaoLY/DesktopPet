@@ -1,0 +1,35 @@
+# 构建文件
+
+/bin/
+*.aps
+
+# 编译生成文件
+*.obj
+*.pdb
+*.ilk
+*.dll
+*.exe
+*.lib
+*.exp
+
+# IDE/编辑器文件
+.vs/
+.vscode/
+*.sln
+*.vcxproj*
+*.user
+*.suo
+
+# CMake 临时文件
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Testing/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+
+# 其他
+.DS_Store
+Thumbs.db

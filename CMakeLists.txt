@@ -26,6 +26,13 @@ endif()
 
 project(DesktopPet LANGUAGES CXX)
 
+# 禁止源码内构建
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+    message(FATAL_ERROR "Prohibit building in the source code directory! Please use the build folder"
+        
+    )
+endif()
+
 # 显示使用的 CMake 路径
 message(STATUS "******************************************************")
 message(STATUS "Using CMake from: ${CMAKE_COMMAND}")
